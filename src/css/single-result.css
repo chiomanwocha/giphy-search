@@ -1,0 +1,35 @@
+.giphy-details{
+    display: grid;
+    grid-template-columns: 35vw 40vw;
+    grid-template-rows: 400px;
+    margin: 15vh auto;
+    width: 75vw;
+    overflow-wrap: break-word;
+}
+div.details{
+    text-align: start;
+    padding: 0 3vw
+}
+.details-button {
+    padding: 20px 50px;
+    background: black;
+    color: white;
+    font-weight: 900;
+    font-size: 15px;
+    outline: none;
+    border: 1px solid black;
+    border-radius: 100px;
+    font-weight: 900;
+    margin: 50px 0 20px;
+    cursor: pointer
+}
+.details-button:hover {
+    background: hsl(0, 0%, 30%);
+    transition: .1s;
+}
+.result-body{
+    margin-top: 100px
+}
+.giphy-img > img{
+    object-fit: unset;
+}
