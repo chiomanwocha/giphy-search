@@ -7,32 +7,22 @@ import { Link } from 'react-router-dom'
 import '../css/main.css';
 
 const Main = () => {
-    // const [query, setQuery] = useState(localStorage.getItem('query') || '');
     const [query, setQuery] = useState('');
-    const [results, setResults] = useState(() => {
-        const savedResults = localStorage.getItem('results')
-        if(savedResults){
-            return JSON.parse(savedResults)
-        } else {
-            return []
-        }
-    })
+    const [results, setResults] = useState(() => {return localStorage.getItem('results') ? JSON.parse(localStorage.getItem('results')) : []})
     const [error, setError] = useState('')
     const [loading, setLoading] = useState(false)
     const [showError, setShowError] = useState(false)
     
-    const API_KEY = process.env.REACT_APP_API_KEY
+    const {REACT_APP_API_KEY: API_KEY} = process.env
 
     const getQueryValue = (e) => {
         setQuery(e.target.value);
     }
     const data = async () => {
         setLoading(true);
-        // console.log(query);
         await axios
         .get(`https://api.giphy.com/v1/gifs/search?api_key=${API_KEY}&q=${query}&offset=0&rating=g&lang=en`)
         .then(response => {
-            // console.log(response);
             if ((response.data.data).length === 0){
                 setError('Oopsie Woopsie.. No results found')
                 setShowError(true)
@@ -45,28 +35,31 @@ const Main = () => {
             console.log(error);
         })
         .finally(() => {
-            setQuery('');
             setLoading(false)
         });
     };
-    
+
+    const removeFocus = () => {
+        const input = document.getElementById('inputBar')
+        input.blur()
+    }
+
+    const clearInput = () => {
+        setQuery('')
+        const input = document.getElementById('inputBar')
+        input.focus()
+    }
+
     localStorage.setItem('results', JSON.stringify(results))
 
     const search = (e) => {
         e.preventDefault();
-        // data(query);
         data()
-        // localStorage.setItem('query', query)
     }
-    
-    // useEffect(() => {
-    //     data(query);
-    // }, []);
-
     return (  
         <div>
             <Header></Header>
-            <Search search={search} query={getQueryValue} queryInput={query} placeholder="type something .."></Search>
+            <Search search={search} query={getQueryValue} queryInput={query} placeholder="type something .." onClick={removeFocus} clearInput={clearInput}></Search>
             <div className="display">
                 {loading ? 
                    <Loader />

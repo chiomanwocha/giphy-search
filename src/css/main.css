@@ -34,3 +34,12 @@
     color: rgb(183, 183, 183);
     font-style: italic;
   }
+
+  @media screen and (max-width: 425px) {
+    .result-container{
+      grid-template-columns: repeat(2, .5fr);
+    }
+    .img-container {
+      width: 100%
+    }
+  }

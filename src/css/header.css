@@ -6,9 +6,12 @@ nav{
     color: white;
     background-color: black;
 }
-/* .giphy, p{
-    margin: 0
-} */
 .nav-desc{
     margin: 0
 }
+
+@media screen and (max-width: 425px) {
+    nav{
+        padding: 15px 30px;
+    }
+  }

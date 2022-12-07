@@ -9,11 +9,9 @@ import '../css/single-result.css'
 const SingleResult = () => {
     const [giphy, setGiphy] = useState([])
     const [loading, setLoading] = useState(false);
-    const [source, setSource] = useState(true)
     const [img, setImg] = useState('')
-
     const params = useParams()
-    const API_KEY = process.env.REACT_APP_API_KEY
+    const {REACT_APP_API_KEY: API_KEY} = process.env
 
     const fetch = async () => {
         setLoading(true);
@@ -23,11 +21,6 @@ const SingleResult = () => {
             if (response) {
                 setGiphy(response.data.data)
                 setImg(response.data.data.images.original.url)
-                if((response.data.data.source).length){
-                    setSource(true)
-                } else {
-                    setSource(false)
-                }
             }
         })
         .finally(() => {
@@ -52,11 +45,7 @@ const SingleResult = () => {
                         </div>
                         <div className="details">
                             <h3>{giphy.title}</h3>
-                            {source?
-                                <p>Source: <a href={giphy.source} rel="noopener">{giphy.source}</a></p>
-                            :
-                                <p>Source: No Source Available</p>
-                            }
+                            <p>Source: <a href={giphy.url} target="_blank">{giphy.url}</a></p>
                             <p>MPAA rating: <span>{giphy.rating}</span></p>
                             <p>Type: <span>{giphy.type}</span></p>
                             <p>Created on: <span>{giphy.import_datetime}</span></p>
