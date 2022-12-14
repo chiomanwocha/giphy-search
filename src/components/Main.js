@@ -5,39 +5,26 @@ import Loader from './assets/icons/Loader';
 import Header from './Header'
 import { Link } from 'react-router-dom'
 import '../css/main.css';
+import { useQuery } from 'react-query';
+import { ReactQueryDevtools } from 'react-query/devtools'
 
 const Main = () => {
-    const [query, setQuery] = useState('');
-    const [results, setResults] = useState(() => {return localStorage.getItem('results') ? JSON.parse(localStorage.getItem('results')) : []})
-    const [error, setError] = useState('')
-    const [loading, setLoading] = useState(false)
-    const [showError, setShowError] = useState(false)
-    
     const {REACT_APP_API_KEY: API_KEY} = process.env
+    const [query, setQuery] = useState('');
+    const [errorMessage, setErrorMessage] = useState('')
+    const [empty, setEmpty] = useState(false)
 
-    const getQueryValue = (e) => {
-        setQuery(e.target.value);
+    const onError = () => {
+        setErrorMessage('Oopsie Woopsie.. No results found')
     }
-    const data = async () => {
-        setLoading(true);
-        await axios
-        .get(`https://api.giphy.com/v1/gifs/search?api_key=${API_KEY}&q=${query}&offset=0&rating=g&lang=en`)
-        .then(response => {
-            if ((response.data.data).length === 0){
-                setError('Oopsie Woopsie.. No results found')
-                setShowError(true)
-            } else{
-                setShowError(false)
-                setResults(response.data.data)
-            }
-        })
-        .catch(error => {
-            console.log(error);
-        })
-        .finally(() => {
-            setLoading(false)
-        });
-    };
+    const {data, status, refetch} = useQuery('giphy', () => {
+        return axios.get(`https://api.giphy.com/v1/gifs/search?api_key=${API_KEY}&q=${query}&offset=0&rating=g&lang=en`)
+    },
+    {
+        onError,
+        enabled: false,
+        refetchOnWindowFocus: true
+    })
 
     const removeFocus = () => {
         const input = document.getElementById('inputBar')
@@ -50,38 +37,41 @@ const Main = () => {
         input.focus()
     }
 
-    localStorage.setItem('results', JSON.stringify(results))
-
     const search = (e) => {
         e.preventDefault();
-        data()
+        if(query.trim().length === 0){
+            setErrorMessage('Please type something, search input can not be empty')
+            setEmpty(true)
+        } else{
+            setEmpty(false)
+            refetch()
+        }
     }
     return (  
         <div>
             <Header></Header>
-            <Search search={search} query={getQueryValue} queryInput={query} placeholder="type something .." onClick={removeFocus} clearInput={clearInput}></Search>
+                <Search search={search} query={(e) => setQuery(e.target.value)} queryInput={query} placeholder="type something .." onClick={removeFocus} clearInput={clearInput}></Search>
+                {empty && <p className="error">{errorMessage}</p>}
             <div className="display">
-                {loading ? 
-                   <Loader />
-                : 
+                {status === 'loading' && <Loader />}
                     <div>
-                        {showError ?
-                            <p className="error">{error}</p>
-                            :
-                            <div>
-                                 <div className="result-container">
-                                    {results.map((result) => (
-                                        <div key={result.id} className="img-container">
-                                            <Link to={`/${result.id}`} ><img src={result.images.original.url} alt={result.title}/></Link>
+                        {status === 'error' && <p className="error">{errorMessage}</p>}
+                                 <div>
+                                    {status === 'success' && 
+                                        <div className="result-container">
+                                            {data?.data.data.map((data) => (
+                                             <div key={data.id} className="img-container">
+                                                <Link to={`/${data.id}`} >
+                                                    <img src={data.images.original.url} alt={data.title}/>
+                                                </Link>
+                                            </div>
+                                        ))}
                                         </div>
-                                    )  
-                                    )}  
+                                    }
                                 </div>
-                            </div>
-                        }
                     </div>
-                }
             </div>
+            < ReactQueryDevtools />
         </div>
     );
 }

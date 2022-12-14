@@ -1,5 +1,6 @@
 import '../css/search.css'
 import { Icon } from '@iconify/react';
+
 const Search = ({search, query, queryInput, placeholder, onClick, clearInput}) => {
     return ( 
         <div className='search-header'>
