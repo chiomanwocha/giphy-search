@@ -6,7 +6,6 @@ import Header from './Header'
 import { Link } from 'react-router-dom'
 import '../css/main.css';
 import { useQuery } from 'react-query';
-import { ReactQueryDevtools } from 'react-query/devtools'
 
 const Main = () => {
     const {REACT_APP_API_KEY: API_KEY} = process.env
@@ -71,11 +70,8 @@ const Main = () => {
                                 </div>
                     </div>
             </div>
-            < ReactQueryDevtools />
         </div>
     );
 }
  
 export default Main;
-
-

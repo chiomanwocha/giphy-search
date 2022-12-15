@@ -33,3 +33,17 @@ div.details{
 .giphy-img > img{
     object-fit: unset;
 }
+
+@media screen and (max-width: 850px) {
+    .giphy-details{
+        display: block;
+        margin: 5vh auto;
+    }
+    .result-body{
+        margin-top: 50px
+    }
+    .details-button {
+        margin: 20px auto;
+        width: 100%
+    }
+  }

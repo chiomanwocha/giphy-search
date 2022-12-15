@@ -20,7 +20,7 @@
     box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
   }
   .display{
-    width: 80vw;
+    width: 82vw;
     margin: 0 auto;
   }
   .error{
@@ -34,8 +34,33 @@
     color: rgb(183, 183, 183);
     font-style: italic;
   }
+  .pagination{
+    margin: 3vh 0;
+  }
+  .pagination button{
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: 900;
+    color: white;
+    background-color: black;
+    border: none;
+    outline: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  .pagination button:first-child{
+    margin-right: 1vw
+  }
+  .pagination button:hover{
+    background-color: hsl(0, 0%, 30%);
+    transition: .1s;
+  }
+  .pagination button:disabled{
+    background-color: hsl(0, 0%, 58%);
+    cursor: not-allowed;
+  }
 
-  @media screen and (max-width: 425px) {
+  @media screen and (max-width: 850px) {
     .result-container{
       grid-template-columns: repeat(2, .5fr);
     }
