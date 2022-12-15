@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import axios from 'axios';
 import Search from './Search';
 import Loader from './assets/icons/Loader';
@@ -6,13 +6,13 @@ import Header from './Header'
 import { Link } from 'react-router-dom'
 import '../css/main.css';
 import { useQuery } from 'react-query';
+import {ReactQueryDevtools} from 'react-query/devtools'
 
 const Main = () => {
     const {REACT_APP_API_KEY: API_KEY} = process.env
-    const [query, setQuery] = useState('');
+    const [query, setQuery] = useState(sessionStorage.getItem('query') ? JSON.parse(sessionStorage.getItem('query')) : '');
     const [errorMessage, setErrorMessage] = useState('')
     const [empty, setEmpty] = useState(false)
-
     const onError = () => {
         setErrorMessage('Oopsie Woopsie.. No results found')
     }
@@ -22,7 +22,8 @@ const Main = () => {
     {
         onError,
         enabled: false,
-        refetchOnWindowFocus: true
+        refetchOnWindowFocus: true,
+        cacheTime: 6000 * 24
     })
 
     const removeFocus = () => {
@@ -34,6 +35,7 @@ const Main = () => {
         setQuery('')
         const input = document.getElementById('inputBar')
         input.focus()
+        sessionStorage.removeItem("query");
     }
 
     const search = (e) => {
@@ -45,6 +47,11 @@ const Main = () => {
             setEmpty(false)
             refetch()
         }
+        sessionStorage.setItem('query', JSON.stringify(query))
+    }
+    window.onload = () => {
+        setQuery('')
+        sessionStorage.removeItem("query");
     }
     return (  
         <div>
@@ -70,6 +77,7 @@ const Main = () => {
                                 </div>
                     </div>
             </div>
+            <ReactQueryDevtools />
         </div>
     );
 }
